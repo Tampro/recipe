@@ -3,14 +3,16 @@ from django.db import models
 # Create your models here.
 
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
-                                        PermissionsMixin
+    PermissionsMixin
+
+
 class UserManager(BaseUserManager):
 
-    def create_user(self,email,password=None, **extra_fields):
+    def create_user(self, email, password=None, **extra_fields):
         """Create and seve a new user"""
         if not email:
             raise ValueError('User must have an email address')
-        user=self.model(email=self.normalize_email(email), **extra_fields)
+        user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
 
@@ -25,10 +27,11 @@ class UserManager(BaseUserManager):
 
         return user
 
-class User(AbstractBaseUser,PermissionsMixin):
+
+class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that support using email instead of username"""
     email = models.EmailField(max_length=255, unique=True)
-    name= models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
